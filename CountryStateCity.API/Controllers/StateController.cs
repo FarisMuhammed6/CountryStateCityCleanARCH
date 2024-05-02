@@ -3,50 +3,54 @@ using CountryStateCity.Application.CountryStateCity.country.Commands.DeleteCount
 using CountryStateCity.Application.CountryStateCity.country.Commands.UpdateCountry;
 using CountryStateCity.Application.CountryStateCity.country.Queries.GetCountries;
 using CountryStateCity.Application.CountryStateCity.country.Queries.GetCountryById;
+using CountryStateCity.Application.CountryStateCity.state.Commands.CreateState;
+using CountryStateCity.Application.CountryStateCity.state.Commands.DeleteState;
+using CountryStateCity.Application.CountryStateCity.state.Commands.UpdateState;
+using CountryStateCity.Application.CountryStateCity.state.Queries.GetStateById;
+using CountryStateCity.Application.CountryStateCity.state.Queries.GetStates;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace CountryStateCity.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CountryController : ControllerBase
+    public class StateController : ControllerBase
     {
         private readonly IMediator mediator;
 
-        public CountryController(IMediator mediator)
+        public StateController(IMediator mediator)
         {
             this.mediator = mediator;
         }
         [HttpPost]
-        public async Task<IActionResult> CreateCountry(CreateCountryCommand command)
+        public async Task<IActionResult> CreateState(CreateStateCommand command)
         {
-            
-            var createCountry = await mediator.Send(command);
-            return CreatedAtAction(nameof(GetById), new { id = createCountry.Id }, createCountry);
+
+            var createState = await mediator.Send(command);
+            return CreatedAtAction(nameof(GetById), new { id = createState.Id }, createState);
         }
         [HttpGet("{Id}")]
         public async Task<IActionResult> GetById(int Id)
         {
-            var country = await mediator.Send(new GetCountryByIdQuery() { CountryId = Id });
-            if (country == null)
+            var state = await mediator.Send(new GetStateByIdQuery() { StateId = Id });
+            if (state == null)
             {
                 return NotFound();
             }
-            return Ok(country);
+            return Ok(state);
         }
         [HttpGet]
         public async Task<IActionResult> GetAllASYNC()
         {
-            
-            var blogs = await mediator.Send(new GetCountriesQuery());
-           
-            return Ok(blogs);
+
+            var states = await mediator.Send(new GetStatesQuery());
+
+            return Ok(states);
         }
         [HttpPut("{Id}")]
-        public async Task<IActionResult> UpdateCountry(int Id, UpdateCountryCommand command)
+        public async Task<IActionResult> UpdateState(int Id, UpdateStateCommand command)
         {
             if (Id != command.Id)
             {
@@ -56,7 +60,7 @@ namespace CountryStateCity.API.Controllers
             return NoContent();
         }
         [HttpDelete]
-        public async Task<IActionResult> DeleteCountry(int id, DeleteCountryCommand command)
+        public async Task<IActionResult> DeleteState(int id, DeleteStateCommand command)
         {
             if (id != command.Id)
             {
