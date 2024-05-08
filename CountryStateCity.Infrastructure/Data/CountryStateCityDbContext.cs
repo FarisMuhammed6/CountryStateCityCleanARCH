@@ -18,5 +18,6 @@ namespace CountryStateCity.Infrastructure.Data
         public DbSet<Country> countries { get; set; }
         public DbSet<State> states { get; set; }
         public DbSet<City> cities { get; set; }
+        
     }
 }

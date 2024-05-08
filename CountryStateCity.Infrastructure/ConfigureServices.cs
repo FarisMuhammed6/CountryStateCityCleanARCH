@@ -1,14 +1,11 @@
 ﻿using CountryStateCity.Domain.Interface;
+using CountryStateCity.Domain.Interface.Queries.Maters;
 using CountryStateCity.Infrastructure.Data;
+using CountryStateCity.Infrastructure.Queries;
 using CountryStateCity.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CountryStateCity.Infrastructure
 {
@@ -22,9 +19,11 @@ namespace CountryStateCity.Infrastructure
                     throw new Exception("connection string 'BlogdbContext not found' "))
             );
 
-            services.AddTransient<ICountryRepository,CountryRepository>();
-            services.AddTransient<IStateRepository,StateRepository>();
-            services.AddTransient<ICityRepository,CityRepository>();    
+            services.AddTransient<IRepository, BaseRepository>();
+            services.AddTransient<ICityQueries, CityQueries>();
+            services.AddTransient<ICountryQueries, CountryQueries>();
+            services.AddTransient<IStateQueries, StateQueries>();
+
             return services;
         }
     }

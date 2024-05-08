@@ -1,12 +1,9 @@
-﻿using CountryStateCity.Application.CountryStateCity.country.Commands.CreateCountry;
+﻿using CountryStateCity.Application.CountryStateCity.country.Commands;
 using CountryStateCity.Application.CountryStateCity.country.Commands.DeleteCountry;
 using CountryStateCity.Application.CountryStateCity.country.Commands.UpdateCountry;
-using CountryStateCity.Application.CountryStateCity.country.Queries.GetCountries;
-using CountryStateCity.Application.CountryStateCity.country.Queries.GetCountryById;
+using CountryStateCity.Domain.Interface.Queries.Maters;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace CountryStateCity.API.Controllers
 {
@@ -14,23 +11,25 @@ namespace CountryStateCity.API.Controllers
     [ApiController]
     public class CountryController : ControllerBase
     {
+        private readonly ICountryQueries countryQueries;
         private readonly IMediator mediator;
 
-        public CountryController(IMediator mediator)
+        public CountryController(ICountryQueries countryQueries, IMediator mediator)
         {
+            this.countryQueries = countryQueries;
             this.mediator = mediator;
         }
         [HttpPost]
         public async Task<IActionResult> CreateCountry(CreateCountryCommand command)
         {
-            
+
             var createCountry = await mediator.Send(command);
             return CreatedAtAction(nameof(GetById), new { id = createCountry.Id }, createCountry);
         }
         [HttpGet("{Id}")]
-        public async Task<IActionResult> GetById(int Id)
+        public IActionResult GetById(int Id)
         {
-            var country = await mediator.Send(new GetCountryByIdQuery() { CountryId = Id });
+            var country = countryQueries.GetCountryById(Id);
             if (country == null)
             {
                 return NotFound();
@@ -38,12 +37,12 @@ namespace CountryStateCity.API.Controllers
             return Ok(country);
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllASYNC()
+        public IActionResult GetAllASYNC()
         {
-            
-            var blogs = await mediator.Send(new GetCountriesQuery());
-           
-            return Ok(blogs);
+
+            var country = countryQueries.GetAll();
+
+            return Ok(country);
         }
         [HttpPut("{Id}")]
         public async Task<IActionResult> UpdateCountry(int Id, UpdateCountryCommand command)

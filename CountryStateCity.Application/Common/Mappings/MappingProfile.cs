@@ -1,16 +1,32 @@
 ﻿using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using CountryStateCity.Application.CountryStateCity.city;
+using CountryStateCity.Application.CountryStateCity.country;
+using CountryStateCity.Application.CountryStateCity.state;
+using CountryStateCity.Domain.DTOS.AllList;
+using CountryStateCity.Domain.Entities;
+
 
 namespace CountryStateCity.Application.Common.Mappings
 {
     public class MappingProfile : Profile
     {
         public MappingProfile()
+        {
+           /* CreateMap<City, CityDTO>().ReverseMap();
+            CreateMap<State, StateDTO>().ReverseMap();
+            CreateMap<Country, StateDTO>().ReverseMap();
+            CreateMap<City, CityDTO2>().ReverseMap();
+            CreateMap<State, StateDTO2>().ReverseMap();*/
+
+            CreateMap<City, CityDTO>().ReverseMap();
+            CreateMap<State, StateDTO>().ReverseMap();
+            CreateMap<Country, CountryDTO>().ReverseMap();
+            CreateMap<City, CityDTO2>().ReverseMap();
+            CreateMap<State, StateDTO2>().ReverseMap();
+
+
+        }
+        /*public MappingProfile()
         {
             ApplyMappingsFromAssembly(Assembly.GetExecutingAssembly());
         }
@@ -44,6 +60,7 @@ namespace CountryStateCity.Application.Common.Mappings
                     }
                 }
             }
-        }
+        }*/
+
     }
 }

@@ -1,15 +1,8 @@
-﻿using CountryStateCity.Application.CountryStateCity.country.Commands.CreateCountry;
-using CountryStateCity.Application.CountryStateCity.country.Commands.DeleteCountry;
-using CountryStateCity.Application.CountryStateCity.country.Commands.UpdateCountry;
-using CountryStateCity.Application.CountryStateCity.country.Queries.GetCountries;
-using CountryStateCity.Application.CountryStateCity.country.Queries.GetCountryById;
-using CountryStateCity.Application.CountryStateCity.state.Commands.CreateState;
+﻿using CountryStateCity.Application.CountryStateCity.state.Commands;
 using CountryStateCity.Application.CountryStateCity.state.Commands.DeleteState;
 using CountryStateCity.Application.CountryStateCity.state.Commands.UpdateState;
-using CountryStateCity.Application.CountryStateCity.state.Queries.GetStateById;
-using CountryStateCity.Application.CountryStateCity.state.Queries.GetStates;
+using CountryStateCity.Domain.Interface.Queries.Maters;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CountryStateCity.API.Controllers
@@ -18,10 +11,12 @@ namespace CountryStateCity.API.Controllers
     [ApiController]
     public class StateController : ControllerBase
     {
+        private readonly IStateQueries stateQueries;
         private readonly IMediator mediator;
 
-        public StateController(IMediator mediator)
+        public StateController(IStateQueries stateQueries, IMediator mediator)
         {
+            this.stateQueries = stateQueries;
             this.mediator = mediator;
         }
         [HttpPost]
@@ -32,9 +27,9 @@ namespace CountryStateCity.API.Controllers
             return CreatedAtAction(nameof(GetById), new { id = createState.Id }, createState);
         }
         [HttpGet("{Id}")]
-        public async Task<IActionResult> GetById(int Id)
+        public IActionResult GetById(int Id)
         {
-            var state = await mediator.Send(new GetStateByIdQuery() { StateId = Id });
+            var state = stateQueries.GetStateById(Id);
             if (state == null)
             {
                 return NotFound();
@@ -42,10 +37,10 @@ namespace CountryStateCity.API.Controllers
             return Ok(state);
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllASYNC()
+        public IActionResult GetAllASYNC()
         {
 
-            var states = await mediator.Send(new GetStatesQuery());
+            var states = stateQueries.GetAll();
 
             return Ok(states);
         }
